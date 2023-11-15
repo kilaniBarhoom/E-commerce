@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  outline: none;
+  border: solid rgba(0, 0, 0, 0.3) 1px;
+}
+
+input:focus {
+  border-color: #000;
+}
+@media (width <= 450px) {
+  #form-content {
+    width: 30ch;
+  }
+  #form-content h4 {
+    font-size: 1.3rem;
+  }
+  #form-content span {
+    font-size: 0.8rem;
+  }
+}

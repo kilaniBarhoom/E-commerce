@@ -1,0 +1,36 @@
+.landing-products-container {
+  margin: 5vh 0;
+}
+
+.landing-products-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2ch;
+}
+
+.landing-product {
+  border: solid rgba(0, 0, 0, 0.2) 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2ch;
+  padding-top: 5ch;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  transition: all ease 0.2s;
+  user-select: none;
+}
+
+.landing-product:hover {
+  border-color: rgb(0, 128, 255);
+  box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.4);
+}
+
+.landing-product:active {
+  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.4);
+}
+
+.landing-product img {
+  margin: 0 auto;
+}

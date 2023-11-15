@@ -1,0 +1,33 @@
+.slide-container {
+  margin: 5vh 0;
+}
+
+.slide-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2ch;
+}
+
+.slide {
+  border: solid rgba(0, 0, 0, 0.2) 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5ch;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  transition: all ease 0.2s;
+  user-select: none;
+}
+
+.slide:hover {
+  border-color: rgb(0, 128, 255);
+  box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.4);
+}
+
+.slide:active {
+  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.4);
+}

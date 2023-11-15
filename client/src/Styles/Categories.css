@@ -1,0 +1,9 @@
+@media (width <= 800px) {
+  .leftNav {
+    display: none;
+  }
+
+  .categ-btn {
+    display: flex !important;
+  }
+}
