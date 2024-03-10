@@ -1,6 +1,6 @@
 import { Typography, Box, Stack, Divider, Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { FadeIn } from "react-fade-in/lib/FadeIn";
+// import { FadeIn } from "react-fade-in/lib/FadeIn";
 import { useForm } from "react-hook-form";
 
 export default function Signup() {

@@ -1,11 +1,10 @@
-import express, { urlencoded, json } from 'express'
-import { OK } from './constants/status.constants.js'
-import APIRoutes from "./api.js";
-import bodyParser from 'body-parser'
-import cloudinary from 'cloudinary'
-import cors from 'cors'
+import bodyParser from 'body-parser';
 import cookieParser from "cookie-parser";
-import handleErrors from './utils/errors.js'
+import cors from 'cors';
+import express, { json, urlencoded } from 'express';
+import APIRoutes from "./api.js";
+import { OK } from './constants/status.constants.js';
+import handleErrors from './utils/errors.js';
 
 
 
@@ -19,7 +18,11 @@ app.use(bodyParser.json());
 app.use(cookieParser())
 
 // Cross origin configuration 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
+    credentials: true
+}));
 
 app.use(json())
 app.use(urlencoded({

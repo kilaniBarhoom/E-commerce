@@ -1,8 +1,8 @@
+import * as statusCodes from '../constants/status.constants.js';
 import Product from "../models/product.js";
-import * as statusCodes from '../constants/status.constants.js'
+import APIFeatures from '../utils/apiFeatures.js';
+import cloudinary from '../utils/cloudinary.js';
 import ResponseError from "../utils/responseerror.js";
-import cloudinary from '../utils/cloudinary.js'
-import APIFeatures from '../utils/apiFeatures.js'
 
 // /api/products
 export const getProducts = async (req, res, next) => {
@@ -19,45 +19,63 @@ export const getProducts = async (req, res, next) => {
 
 }
 export const createProduct = async (req, res, next) => {
-    const { name, price, description, category, seller, stock } = req.body;
-    const { files } = req
-    if (!name || !price || !description || !category || !seller || !stock || !files) {
+    const { name, price, salePrice, tax, description, category, stock, quantity, status } = req.body;
+    const { files } = req;
+
+    if (!name || !price || !description || !category || !stock || !quantity || !status || !files) {
         return next(
             new ResponseError(
                 "Please provide correct data for the product",
                 statusCodes.BAD_REQUEST
             )
-        )
+        );
     }
 
-    let images = []
+    let images = [];
     const uploadPromises = files.map(async file => {
-        const { path } = file
+        const { path } = file;
         const { secure_url, public_id } = await cloudinary.uploader.upload(path, {
             folder: process.env.CLOUDINARY_PRODUCTS_FOLDER
         });
         images.push({ url: secure_url, public_id });
-    })
+    });
 
-    await Promise.all(uploadPromises)
+    await Promise.all(uploadPromises);
 
-    req.body.user = req.user._id
-    req.body.images = images
-    const productData = req.body
+    // Create a new object with only the required fields
+    const productData = {
+        name,
+        price,
+        description,
+        category,
+        stock,
+        quantity,
+        status,
+        user: req.user._id,
+        images,
+    };
 
-    const product = await Product.create(productData)
+    // Add optional fields if they are present in the request body
+    if (tax) {
+        productData.tax = tax;
+    }
+
+    if (salePrice) {
+        productData.salePrice = salePrice;
+    }
+
+    const product = await Product.create(productData);
     res.status(statusCodes.OK).json({
         message: "Product successfully created",
         product
-    })
-
-}
+    });
+};
 
 // /api/products/:productId
 export const updateProduct = async (req, res, next) => {
     const { productId } = req.params
-    const { name, price, description, images, category, seller, stock } = req.body;
-    if (!name || !price || !description || !images || !category || !seller || !stock) {
+    const { name, price, description, images, category, seller, stock, status } = req.body;
+    if (!name || !price || !description || !images || !category || !seller || !stock || !status) {
         return next(
             new ResponseError(
                 "Please provide correct data for the product",

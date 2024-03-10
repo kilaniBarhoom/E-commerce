@@ -1,71 +1,50 @@
-import React, { useState } from "react";
-import { Stack, Typography, Rating, IconButton, Tooltip } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import "../Styles/LandingProducts.css";
+import { Box, Button, Rating } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
-const ProductCard = ({ productContent }) => {
+export default function ProductCard({ content }) {
   return (
-    <div className="landing-products-container">
-      <div className="landing-products-content">
-        {productContent.map((slide, index) => (
-          <div key={index} className="landing-product">
-            <Stack gap={5}>
-              <img width={150} src={slide.image} alt="nope" />
-              <Stack gap={1}>
-                <Typography
-                  variant="span"
-                  fontSize={13}
-                  fontWeight={600}
-                  style={{ color: "rgba(0, 0, 0, 0.6)" }}
-                >
-                  {slide.category}
-                </Typography>
-                <Typography
-                  variant="h6"
-                  fontWeight={700}
-                  style={{ color: "rgba(0, 0, 0)" }}
-                >
-                  {slide.text}
-                </Typography>
-                <Typography style={{ color: "rgba(0, 0, 0)" }}>
-                  <Rating
-                    name="read-only"
-                    value={slide.rating}
-                    size="small"
-                    readOnly
-                  />
-                </Typography>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Tooltip title="Add To Cart" arrow>
-                    <IconButton color="success" aria-label="add" size="large">
-                      <AddShoppingCartIcon fontSize="inherit" />
-                    </IconButton>
-                  </Tooltip>
-                  <Typography
-                    variant="h6"
-                    fontWeight={700}
-                    style={{ color: "rgba(0, 0, 0)" }}
-                  >
-                    {slide.price}
-                  </Typography>
-                  <Tooltip title="View" arrow>
-                    <IconButton aria-label="view" size="large">
-                      <RemoveRedEyeIcon fontSize="inherit" />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Stack>
-            </Stack>
-          </div>
-        ))}
-      </div>
-    </div>
+    <Card
+      sx={{ minWidth: 180, maxWidth: 275 }}
+      className="border-solid border-2 border-neutral-200"
+    >
+      <CardMedia
+        sx={{ height: 100 }}
+        image={content?.image}
+        title="green iguana"
+      />
+      <CardContent>
+        <Link className="no-underline text-black hover:text-blue-400">
+          <Typography gutterBottom variant="h6" component="div">
+            {content?.text}
+          </Typography>
+        </Link>
+        <Rating className="mt-2" value={3} readOnly />
+        <Box>
+          <Typography variant="h6">{content?.price}</Typography>
+        </Box>
+      </CardContent>
+      <CardActions>
+        <Button
+          variant="contained"
+          className="w-full"
+          size="small"
+          startIcon={<AddShoppingCartIcon />}
+        >
+          Add to cart
+        </Button>
+        {/* <IconButton size="small">Learn More</IconButton> */}
+      </CardActions>
+    </Card>
   );
-};
+}
 
-export default ProductCard;
+ProductCard.propTypes = {
+  content: PropTypes.object.isRequired,
+};

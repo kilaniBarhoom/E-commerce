@@ -1,72 +1,37 @@
-import * as React from "react";
-import {
-  IconButton,
-  InputBase,
-  styled,
-  alpha,
-  AppBar,
-  Box,
-  Typography,
-  Toolbar,
-  Badge,
-  Menu,
-  MenuItem,
-} from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MenuIcon from "@mui/icons-material/Menu";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import CatDrawer from "./CatDrawer";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import MenuIcon from "@mui/icons-material/Menu";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
+import PropTypes from "prop-types";
+
+import * as MUI from "@mui/material";
+import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import CartView from "../Modals/CartView";
+import CatDrawer from "./CatDrawer";
+import UserPreferencesSettings from "../Modals/UserPreferenceSettings";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+const settingsLoggedIn = [
+  {
+    setting: "Home",
+    navigate: "/",
+    icon: <HomeOutlinedIcon />,
   },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
+  {
+    setting: "Account",
+    navigate: "/account",
+    icon: <PersonOutlineOutlinedIcon />,
   },
-}));
+];
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    border: "solid 2px rgba(0, 0, 0, 0.6)",
-    borderRadius: "10px",
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "40ch",
-    },
-  },
-}));
-
-export default function TopNav() {
+export default function TopNav({ darkMode, setDarkMode }) {
   const nav = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [openSettingsPreferences, setOpenSettingsPreferences] =
+    React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -95,7 +60,7 @@ export default function TopNav() {
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
-    <Menu
+    <MUI.Menu
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "bottom",
@@ -111,8 +76,8 @@ export default function TopNav() {
       onClose={handleMenuClose}
     >
       {user != null && (
-        <Box>
-          <MenuItem
+        <MUI.Box width={300}>
+          {/* <MenuItem
             onClick={() => {
               nav("/login");
               handleMenuClose();
@@ -127,28 +92,76 @@ export default function TopNav() {
             }}
           >
             Signup
-          </MenuItem>
-        </Box>
-      )}
-      {user == null && (
-        <Box>
-          <MenuItem
+          </MenuItem> */}
+          <MUI.Stack p={2} direction="row" alignItems="center" gap={1}>
+            <MUI.Avatar sx={{ width: 35, height: 35 }}>
+              {/* {loginInfo?.name[0].toUpperCase()} */}I
+            </MUI.Avatar>
+            <MUI.Stack>
+              <MUI.Typography variant="h6" color="#000" fontWeight="900" p={0}>
+                {/* {loginInfo?.name || "User Name"} */}
+                {"User Name"}
+              </MUI.Typography>
+              <MUI.Typography color="rgba(0, 0, 0, 0.6)" fontSize="0.8rem">
+                {/* {loginInfo?.email || "email@email.com"} */}
+                {"email@email.com"}
+              </MUI.Typography>
+            </MUI.Stack>
+          </MUI.Stack>
+
+          <MUI.Divider sx={{ borderStyle: "dashed", opacity: 1 }} />
+          {settingsLoggedIn.map((setting, index) => (
+            <MUI.MenuItem
+              key={index}
+              onClick={() => {
+                handleMenuClose();
+                nav(setting.navigate);
+              }}
+              sx={{
+                m: 1,
+                p: 1,
+                borderRadius: 1,
+                color: "black",
+                fontWeight: 800,
+              }}
+            >
+              <MUI.Stack direction="row" gap={1}>
+                {setting.icon}
+                <MUI.Typography>{setting.setting}</MUI.Typography>
+              </MUI.Stack>
+            </MUI.MenuItem>
+          ))}
+          <MUI.Divider sx={{ borderStyle: "dashed" }} />
+          <MUI.MenuItem
             onClick={() => {
-              console.log(user);
-              handleMenuClose();
+              localStorage.removeItem("loginInfo");
+              window.location.reload();
+            }}
+            sx={{
+              mx: 1,
+              borderRadius: 1,
             }}
           >
-            Profile
-          </MenuItem>
-          <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-        </Box>
+            <MUI.Typography
+              sx={{
+                color: "#ff005f",
+                fontWeight: 700,
+                width: "100%",
+                textAlign: "center",
+                fontSize: 20,
+              }}
+            >
+              Logout
+            </MUI.Typography>
+          </MUI.MenuItem>
+        </MUI.Box>
       )}
-    </Menu>
+    </MUI.Menu>
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
-    <Menu
+    <MUI.Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: "top",
@@ -163,50 +176,60 @@ export default function TopNav() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton
+      <MUI.MenuItem>
+        <MUI.IconButton
           onClick={() => setOpen(true)}
           size="large"
           aria-label="cart"
           color="inherit"
         >
-          <Badge badgeContent={1} color="error">
+          <MUI.Badge badgeContent={1} color="error">
             <AddShoppingCartIcon />
-          </Badge>
-        </IconButton>
+          </MUI.Badge>
+        </MUI.IconButton>
         <p>Cart</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
+      </MUI.MenuItem>
+      <MUI.MenuItem onClick={handleProfileMenuOpen}>
+        <MUI.IconButton
           size="large"
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
-        </IconButton>
+          <MUI.Avatar sx={{ width: 35, height: 35 }} />
+        </MUI.IconButton>
         <p>Profile</p>
-      </MenuItem>
-    </Menu>
+      </MUI.MenuItem>
+    </MUI.Menu>
   );
 
   return (
-    <Box sx={{ flexGrow: 1, px: 2, py: 2 }}>
+    <MUI.Box
+      sx={{
+        flexGrow: 1,
+        borderBottom: "solid rgba(255, 255, 255, 0.1) 1px",
+        mb: 2,
+      }}
+    >
       <CartView open={open} setOpen={setOpen} />
-      <AppBar
+      <MUI.AppBar
         position="static"
         sx={{ bgcolor: "transparent", color: "#000", px: 0, boxShadow: "none" }}
       >
-        <Toolbar sx={{ p: 0 }}>
-          <Typography
+        <UserPreferencesSettings
+          open={openSettingsPreferences}
+          setOpen={setOpenSettingsPreferences}
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
+        <MUI.Toolbar sx={{ p: 0 }}>
+          <MUI.Typography
             variant="h5"
             fontWeight={600}
             noWrap
             component="div"
-            sx={{
-              display: { xs: "none", sm: "flex", cursor: "pointer" },
-            }}
+            className="dark:text-white cursor-pointer flex flex-row items-center gap-2"
             onClick={() => nav("/")}
           >
             <img
@@ -216,29 +239,35 @@ export default function TopNav() {
               style={{ transform: "rotateY(180deg)" }}
             />
             E-commerce
-          </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search for a product"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
+          </MUI.Typography>
+          <MUI.Box sx={{ flexGrow: 1 }} />
+          <MUI.Stack
+            direction="row"
+            gap={1}
+            alignItems={"center"}
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
+            <MUI.IconButton
+              className="hover:bg-transparent dark:text-white"
               onClick={() => setOpen(true)}
-              size="large"
+              size="small"
               aria-label="show 17 new notifications"
               color="inherit"
             >
-              <Badge badgeContent={1} color="error">
+              <MUI.Badge badgeContent={1} color="error">
                 <AddShoppingCartIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
+              </MUI.Badge>
+            </MUI.IconButton>
+            <MUI.Tooltip title="Settings" arrow disableInteractive>
+              <MUI.IconButton
+                onClick={() => setOpenSettingsPreferences(true)}
+                className="text-neutral-600 dark:text-neutral-400 dark:hover:text-neutral-200 rotate-0 hover:rotate-45 transition-transform duration-300 ease-in-out"
+              >
+                <SettingsSharpIcon fontSize="medium" className="text-3xl" />
+              </MUI.IconButton>
+            </MUI.Tooltip>
+            <MUI.IconButton
+              sx={{ "&:hover": { backgroundColor: "transparent" } }}
               size="large"
               edge="end"
               aria-label="account of current user"
@@ -247,11 +276,11 @@ export default function TopNav() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
+              <MUI.Avatar sx={{ width: 35, height: 35 }} />
+            </MUI.IconButton>
+          </MUI.Stack>
+          <MUI.Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <MUI.IconButton
               size="large"
               aria-label="menu"
               aria-controls={mobileMenuId}
@@ -259,8 +288,8 @@ export default function TopNav() {
               color="inherit"
             >
               <CatDrawer />
-            </IconButton>
-            <IconButton
+            </MUI.IconButton>
+            <MUI.IconButton
               size="large"
               aria-label="show more"
               aria-controls={mobileMenuId}
@@ -269,12 +298,17 @@ export default function TopNav() {
               color="inherit"
             >
               <MenuIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
+            </MUI.IconButton>
+          </MUI.Box>
+        </MUI.Toolbar>
+      </MUI.AppBar>
       {renderMobileMenu}
       {renderMenu}
-    </Box>
+    </MUI.Box>
   );
 }
+
+TopNav.propTypes = {
+  darkMode: PropTypes.bool.isRequired,
+  setDarkMode: PropTypes.func.isRequired,
+};

@@ -1,7 +1,7 @@
-import { Typography, Box, Stack, Divider, Button } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { FadeIn } from "react-fade-in/lib/FadeIn";
+import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import axios from "axios";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const nav = useNavigate();
@@ -10,7 +10,20 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        data,
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        console.log(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -35,7 +48,6 @@ export default function Login() {
         </Typography>
       </Box>
       <Divider />
-      {/* <FadeIn> */}
       <Box
         mx="auto"
         mt={5}
@@ -92,7 +104,7 @@ export default function Login() {
                   Login
                 </Button>
                 <Typography color="rgba(0, 0, 0, 0.9) ">
-                  Don't have an account?{" "}
+                  Dont have an account?{" "}
                   <Link style={{ textDecoration: "none" }} to="/signup">
                     Sign up
                   </Link>
@@ -102,7 +114,6 @@ export default function Login() {
           </form>
         </Stack>
       </Box>
-      {/* </FadeIn> */}
     </div>
   );
 }

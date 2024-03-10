@@ -2,8 +2,7 @@ import * as React from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MobileStepper from "@mui/material/MobileStepper";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
@@ -31,18 +30,6 @@ function Stepper({ images }) {
 
   return (
     <Box sx={{ width: "100%", flexGrow: 1 }}>
-      <Paper
-        square
-        elevation={0}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          height: 50,
-          pl: 2,
-          bgcolor: "background.default",
-          width: "100%",
-        }}
-      ></Paper>
       <AutoPlaySwipeableViews
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={activeStep}
@@ -97,5 +84,9 @@ function Stepper({ images }) {
     </Box>
   );
 }
+
+Stepper.propTypes = {
+  images: PropTypes.array.isRequired,
+};
 
 export default Stepper;

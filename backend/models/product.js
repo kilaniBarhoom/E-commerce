@@ -14,12 +14,23 @@ const productSchema = new Schema({
         min: [0, 'Product price cannot be negative!'],
         default: 0.00
     },
+    salePrice: {
+        type: Number,
+        required: false,
+        min: [0, 'Product price cannot be negative!'],
+        default: 0.00
+    },
+    tax: {
+        type: Number,
+        required: false,
+        min: [0, 'Product price cannot be negative!'],
+        default: 0.00
+    },
     description: {
         type: String,
         required: [true, 'Product must have a description'],
         trim: true,
     },
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
     images: [{
         public_id: {
             type: String,
@@ -34,31 +45,34 @@ const productSchema = new Schema({
         type: String,
         required: [true, 'Product must be in a category'],
         enum: {
-            values: ['Electronics',
+            values: [
                 'Cameras',
                 'Laptops',
+                'Electronics',
                 'Accessories',
-                'Headphones',
                 'Food',
                 'Books',
-                'Clothes/Shoes',
+                'Clothes&Shoes',
                 'Sports',
                 'Outdoor',
-                'Home'
+                'Indoor'
             ],
             message: 'Please select the correct categorty for the product'
         }
     },
-    seller: {
-        type: String,
-        required: [true, 'Please enter product seller']
-    },
     stock: {
         type: Number,
         required: [true, 'Please enter product stock count'],
-        maxlength: [5, 'Products stock cannot be longer that 5 characters'],
-        minlength: [0, 'Products stock cannot be negative'],
+        max: [10000, 'Products stock cannot be longer that 5 characters'],
+        min: [0, 'Products stock cannot be negative'],
         default: 0
+    },
+    quantity: {
+        type: Number,
+        required: [true, 'Please enter product quantity'],
+        max: [500, 'Products quantity cannot be longer that 500'],
+        min: [0, 'Products quantity cannot be negative'],
+        default: 1
     },
     user: {
         type: Schema.Types.ObjectId, ref: 'User',
@@ -76,7 +90,15 @@ const productSchema = new Schema({
             required: [true, 'Review must be provided']
         },
         user: { type: Schema.Types.ObjectId, ref: 'User' }
-    }]
+    }],
+    status: {
+        type: String,
+        default: 'Pending',
+        enum: {
+            values: ['Active', 'Pending', 'Sold Out'],
+            message: 'Please select the correct status for the product'
+        }
+    },
 }, { timestamps: true })
 
 

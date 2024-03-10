@@ -4,7 +4,7 @@ import { OK } from '../constants/status.constants.js'
 import { auth, hasRole } from '../middleware/auth.middleware.js'
 import * as controller from '../controllers/auth.controller.js'
 import fileUpload, { fileValidation } from '../utils/multer.js'
-const ADMIN = 'admin'
+import Roles from '../utils/AuthRoles.js'
 
 const router = express.Router()
 
@@ -21,8 +21,8 @@ router.route('/me')
     .get(auth, catcher(controller.getOwnProfile))
     .put(auth, fileUpload(fileValidation.image).single('avatar'), catcher(controller.updateOwnProfile))
 
-router.get('/admin/users', auth, hasRole(ADMIN), catcher(controller.getAll))
-router.route('/admin/users/:userId', auth, hasRole(ADMIN))
+router.get('/admin/users', auth, hasRole(Roles.ADMIN), catcher(controller.getAll))
+router.route('/admin/users/:userId', auth, hasRole(Roles.ADMIN))
     .get(catcher(controller.getOneUser))
     .put(catcher(controller.updateOneUser))
     .delete(catcher(controller.deleteOneUser))
