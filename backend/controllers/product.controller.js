@@ -7,17 +7,39 @@ import ResponseError from "../utils/responseerror.js";
 // /api/products
 export const getProducts = async (req, res, next) => {
 
-    const resPerPage = 8
+    const productsPerPage = req.query.productsPerPage;
+    const totalPages = Math.ceil(await Product.countDocuments() / productsPerPage);
+    const page = Math.ceil(req.query.page || 1);
     const apiFeatures = new APIFeatures(Product.find(), req.query)
         .search()
-        .pagination(resPerPage)
+        .pagination(productsPerPage)
     const products = await apiFeatures.query.populate('user')
     res.status(statusCodes.OK).json({
         count: products.length,
+        page,
+        totalPages,
         products
     })
-
 }
+
+// /api/products/:productId
+export const getProduct = async (req, res, next) => {
+    const { productId } = req.params
+    const product = await Product.findById(productId).populate('user')
+    if (!product) {
+        return next(
+            new ResponseError(
+                "Product not found",
+                statusCodes.NOT_FOUND
+            )
+        )
+    }
+    res.status(statusCodes.OK).json({
+        product
+    })
+}
+
+
 export const createProduct = async (req, res, next) => {
     const { name, price, salePrice, tax, description, category, stock, quantity, status } = req.body;
     const { files } = req;
