@@ -43,7 +43,7 @@ export default function Products() {
           <LinearProgress variant="solid" size="sm" />
         </MUI.Box>
       ) : (
-        <MUI.Stack id="the container" className="w-full h-fit gap-5">
+        <MUI.Stack id="the container" className="w-full h-full gap-5">
           <MUI.Stack className="flex flex-row justify-between items-center">
             <MUI.Stack
               direction="row"
@@ -73,7 +73,7 @@ export default function Products() {
               Add Product
             </MUI.Button>
           </MUI.Stack>
-          <MUI.Box id="products table">
+          <MUI.Box id="products table" className="dataGridContainer">
             <AdminTableStructure
               rows={
                 rows || [
