@@ -1,8 +1,22 @@
+import DeleteForever from "@mui/icons-material/DeleteForever";
+import Edit from "@mui/icons-material/Edit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Avatar, IconButton, Rating, Stack, Typography } from "@mui/material";
-import { Tooltip } from "@mui/joy";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import {
+  Dropdown,
+  IconButton,
+  ListDivider,
+  ListItemDecorator,
+  Menu,
+  MenuButton,
+  MenuItem,
+  Tooltip,
+} from "@mui/joy";
+import { Avatar, Rating, Stack, Typography } from "@mui/material";
 import avatarColors from "../AdminSalesMenAvatarColors";
+import { useNavigate } from "react-router-dom";
 export default function AdminProductsGridLayout() {
+  const nav = useNavigate();
   const productsHeaderGridRow = [
     {
       field: "preview",
@@ -176,20 +190,49 @@ export default function AdminProductsGridLayout() {
     },
     {
       field: "acion",
-      headerName: "",
+      headerName: "Actions",
       align: "center",
       width: 100,
       editable: false,
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
-      renderCell: () => (
-        <IconButton
-          className="text-neutral-600 dark:text-neutral-200"
-          size="small"
-        >
-          <MoreVertIcon />
-        </IconButton>
+      renderCell: (params) => (
+        <Dropdown>
+          <MenuButton
+            slots={{ root: IconButton }}
+            size="sm"
+            slotProps={{ root: { variant: "plain" } }}
+            className="dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-600 active:bg-neutral-200 dark:active:bg-neutral-500"
+          >
+            <MoreVertIcon />
+          </MenuButton>
+          <Menu placement="bottom-end">
+            <MenuItem
+              onClick={() => {
+                nav(`/admin/products/${params.row.id}`);
+              }}
+            >
+              <ListItemDecorator>
+                <RemoveRedEyeIcon />
+              </ListItemDecorator>
+              View
+            </MenuItem>
+            <MenuItem>
+              <ListItemDecorator>
+                <Edit />
+              </ListItemDecorator>{" "}
+              Edit
+            </MenuItem>
+            <ListDivider />
+            <MenuItem variant="soft" color="danger">
+              <ListItemDecorator sx={{ color: "inherit" }}>
+                <DeleteForever />
+              </ListItemDecorator>{" "}
+              Delete
+            </MenuItem>
+          </Menu>
+        </Dropdown>
       ),
       headerAlign: "center",
     },
