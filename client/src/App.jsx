@@ -1,15 +1,16 @@
-import { Routes, Route, useLocation } from "react-router-dom";
-import Login from "./Pages/Login";
-import Signup from "./Pages/Signup";
-import Landing from "./Pages/Landing";
-import TopNav from "./Components/TopNav";
-import "./App.css";
-import "./Styles/header.css";
-import { useEffect, useState } from "react";
-import ProductsPage from "./Pages/ProductsPage";
 import { Container } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import "./App.css";
+import TopNav from "./Components/TopNav";
 import AdminDashBoard from "./Pages/AdminDashBoard";
+import ProductView from "./Pages/ProductView";
 import CreateProduct from "./Pages/CreateProduct";
+import Landing from "./Pages/Landing";
+import Login from "./Pages/Login";
+import ProductsPage from "./Pages/ProductsPage";
+import Signup from "./Pages/Signup";
+import "./Styles/header.css";
 
 // import { Container } from "@mui/material";
 
@@ -32,7 +33,7 @@ export default function App() {
   //   localStorage.setItem("user", JSON.stringify(user));
   // }, [user]);
   return (
-    <div className={`${darkMode ? "dark" : ""}`}>
+    <div className={`${darkMode ? "dark" : ""} `}>
       <div className="dark:bg-neutral-900 min-h-screen">
         <Container maxWidth="xl">
           {showNav && <TopNav darkMode={darkMode} setDarkMode={setDarkMode} />}
@@ -43,6 +44,11 @@ export default function App() {
             <Route path="/categories" element={<ProductsPage />} />
             <Route path="/admin" element={<AdminDashBoard />} />
             <Route path="/products/create" element={<CreateProduct />} />
+            <Route
+              path="/admin/products/:productId"
+              element={<ProductView />}
+            />
+            <Route path="*" element={<Landing />} />
           </Routes>
         </Container>
       </div>
