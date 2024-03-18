@@ -1,17 +1,10 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import MenuIcon from "@mui/icons-material/Menu";
-import { Typography } from "@mui/material";
+import * as React from "react";
 
 export default function CatDrawer() {
   const [state, setState] = React.useState({
@@ -44,7 +37,7 @@ export default function CatDrawer() {
           <ListItemButton>
             <h2>
               <img
-                src="./src/assets/shoplogo.png"
+                src="./assets/shoplogo.png"
                 width={30}
                 alt=""
                 style={{ transform: "rotateY(180deg)" }}

@@ -1,16 +1,17 @@
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import MenuIcon from "@mui/icons-material/Menu";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
-import PropTypes from "prop-types";
 
+// import { ThemeContext } from "@emotion/react";
 import * as MUI from "@mui/material";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import CartView from "../Modals/CartView";
-import CatDrawer from "./CatDrawer";
+// import io from "socket.io-client";
+import axios from "../AxiosCredintialsCookie";
 import UserPreferencesSettings from "../Modals/UserPreferenceSettings";
+import PropTypes from "prop-types";
+import { GetProfileOfAUser } from "../Utils/GetProfileOfAUser";
 
 const settingsLoggedIn = [
   {
@@ -25,37 +26,54 @@ const settingsLoggedIn = [
   },
 ];
 
-export default function TopNav({ darkMode, setDarkMode }) {
+export default function TopNav({ socket }) {
+  // const { darkMode, setDarkMode } = React.useContext(ThemeContext);
   const nav = useNavigate();
-  const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [openSettingsPreferences, setOpenSettingsPreferences] =
     React.useState(false);
+  // const [notifications, setNotifications] = React.useState([]);
+
+  React.useEffect(() => {
+    const createNotificationOfLoggedIn = (userId) => {
+      const { getProfileOfAUser } = GetProfileOfAUser();
+      const user = getProfileOfAUser(userId);
+      return user;
+    };
+    socket?.on("userLoggedIn", async (userId) => {
+      console.log(
+        "User Logged In:",
+        await createNotificationOfLoggedIn(userId)
+      );
+    });
+  }, [socket]);
+
+  const handleUserLogout = async () => {
+    localStorage.removeItem("user");
+    try {
+      const res = await axios.get("/auth/logout");
+      if (res) {
+        nav("/");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    window.location.reload();
+  };
 
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const [user, setUser] = React.useState(null);
   React.useEffect(() => {
-    setUser(localStorage.getItem("user"));
+    setUser(JSON.parse(localStorage.getItem("user")));
   }, []);
 
   const menuId = "primary-search-account-menu";
@@ -75,36 +93,39 @@ export default function TopNav({ darkMode, setDarkMode }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {user != null && (
-        <MUI.Box width={300}>
-          {/* <MenuItem
+      {!user ? (
+        <MUI.Box width={200}>
+          <MUI.MenuItem
             onClick={() => {
               nav("/login");
               handleMenuClose();
             }}
           >
             Login
-          </MenuItem>
-          <MenuItem
+          </MUI.MenuItem>
+          <MUI.MenuItem
             onClick={() => {
               nav("/signup");
               handleMenuClose();
             }}
           >
             Signup
-          </MenuItem> */}
+          </MUI.MenuItem>
+        </MUI.Box>
+      ) : (
+        <MUI.Box width={300}>
           <MUI.Stack p={2} direction="row" alignItems="center" gap={1}>
-            <MUI.Avatar sx={{ width: 35, height: 35 }}>
+            <MUI.Avatar src={user?.avatar?.url} sx={{ width: 35, height: 35 }}>
               {/* {loginInfo?.name[0].toUpperCase()} */}I
             </MUI.Avatar>
             <MUI.Stack>
               <MUI.Typography variant="h6" color="#000" fontWeight="900" p={0}>
                 {/* {loginInfo?.name || "User Name"} */}
-                {"User Name"}
+                {user?.username || "User Name"}
               </MUI.Typography>
               <MUI.Typography color="rgba(0, 0, 0, 0.6)" fontSize="0.8rem">
                 {/* {loginInfo?.email || "email@email.com"} */}
-                {"email@email.com"}
+                {user?.email || "email@email.com"}
               </MUI.Typography>
             </MUI.Stack>
           </MUI.Stack>
@@ -134,8 +155,7 @@ export default function TopNav({ darkMode, setDarkMode }) {
           <MUI.Divider sx={{ borderStyle: "dashed" }} />
           <MUI.MenuItem
             onClick={() => {
-              localStorage.removeItem("loginInfo");
-              window.location.reload();
+              handleUserLogout();
             }}
             sx={{
               mx: 1,
@@ -159,51 +179,6 @@ export default function TopNav({ darkMode, setDarkMode }) {
     </MUI.Menu>
   );
 
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <MUI.Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MUI.MenuItem>
-        <MUI.IconButton
-          onClick={() => setOpen(true)}
-          size="large"
-          aria-label="cart"
-          color="inherit"
-        >
-          <MUI.Badge badgeContent={1} color="error">
-            <AddShoppingCartIcon />
-          </MUI.Badge>
-        </MUI.IconButton>
-        <p>Cart</p>
-      </MUI.MenuItem>
-      <MUI.MenuItem onClick={handleProfileMenuOpen}>
-        <MUI.IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <MUI.Avatar sx={{ width: 35, height: 35 }} />
-        </MUI.IconButton>
-        <p>Profile</p>
-      </MUI.MenuItem>
-    </MUI.Menu>
-  );
-
   return (
     <MUI.Box
       sx={{
@@ -212,7 +187,6 @@ export default function TopNav({ darkMode, setDarkMode }) {
         mb: 2,
       }}
     >
-      <CartView open={open} setOpen={setOpen} />
       <MUI.AppBar
         position="static"
         sx={{ bgcolor: "transparent", color: "#000", px: 0, boxShadow: "none" }}
@@ -220,8 +194,6 @@ export default function TopNav({ darkMode, setDarkMode }) {
         <UserPreferencesSettings
           open={openSettingsPreferences}
           setOpen={setOpenSettingsPreferences}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
         />
         <MUI.Toolbar sx={{ p: 0 }}>
           <MUI.Typography
@@ -233,7 +205,7 @@ export default function TopNav({ darkMode, setDarkMode }) {
             onClick={() => nav("/")}
           >
             <img
-              src="./src/assets/shoplogo.png"
+              src="./assets/shoplogo.png"
               width={30}
               alt=""
               style={{ transform: "rotateY(180deg)" }}
@@ -243,19 +215,18 @@ export default function TopNav({ darkMode, setDarkMode }) {
           <MUI.Box sx={{ flexGrow: 1 }} />
           <MUI.Stack
             direction="row"
-            gap={1}
             alignItems={"center"}
-            sx={{ display: { xs: "none", md: "flex" } }}
+            sx={{ gap: { sx: 0, md: 1 } }}
           >
             <MUI.IconButton
               className="hover:bg-transparent dark:text-white"
-              onClick={() => setOpen(true)}
+              // onClick={() => setOpen(true)}
               size="small"
               aria-label="show 17 new notifications"
               color="inherit"
             >
               <MUI.Badge badgeContent={1} color="error">
-                <AddShoppingCartIcon />
+                <NotificationsIcon />
               </MUI.Badge>
             </MUI.IconButton>
             <MUI.Tooltip title="Settings" arrow disableInteractive>
@@ -267,7 +238,7 @@ export default function TopNav({ darkMode, setDarkMode }) {
               </MUI.IconButton>
             </MUI.Tooltip>
             <MUI.IconButton
-              sx={{ "&:hover": { backgroundColor: "transparent" } }}
+              sx={{ "&:hover": { backgroundColor: "transparent" }, p: 0 }}
               size="large"
               edge="end"
               aria-label="account of current user"
@@ -276,39 +247,19 @@ export default function TopNav({ darkMode, setDarkMode }) {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <MUI.Avatar sx={{ width: 35, height: 35 }} />
+              <MUI.Avatar
+                src={user?.avatar?.url}
+                sx={{ width: 35, height: 35 }}
+              />
             </MUI.IconButton>
           </MUI.Stack>
-          <MUI.Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <MUI.IconButton
-              size="large"
-              aria-label="menu"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              color="inherit"
-            >
-              <CatDrawer />
-            </MUI.IconButton>
-            <MUI.IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MenuIcon />
-            </MUI.IconButton>
-          </MUI.Box>
         </MUI.Toolbar>
       </MUI.AppBar>
-      {renderMobileMenu}
       {renderMenu}
     </MUI.Box>
   );
 }
 
 TopNav.propTypes = {
-  darkMode: PropTypes.bool.isRequired,
-  setDarkMode: PropTypes.func.isRequired,
+  socket: PropTypes.object,
 };

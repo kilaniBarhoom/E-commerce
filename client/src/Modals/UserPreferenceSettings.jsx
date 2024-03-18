@@ -12,6 +12,8 @@ import {
   Typography,
 } from "@mui/material";
 import PropTypes from "prop-types";
+import { useContext } from "react";
+import { ThemeContext } from "../Contexts/ThemeProvider";
 
 const style = {
   position: "absolute",
@@ -25,12 +27,8 @@ const style = {
   p: 3,
 };
 
-export default function UserPreferencesSettings({
-  open,
-  setOpen,
-  darkMode,
-  setDarkMode,
-}) {
+export default function UserPreferencesSettings({ open, setOpen }) {
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
   return (
     <Modal
       open={open}
@@ -131,6 +129,4 @@ export default function UserPreferencesSettings({
 UserPreferencesSettings.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
-  darkMode: PropTypes.bool.isRequired,
-  setDarkMode: PropTypes.func.isRequired,
 };

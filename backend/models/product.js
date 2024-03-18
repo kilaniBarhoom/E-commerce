@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import cloudinary from '../utils/cloudinary.js'
+import Review from './review.js'
 
 const productSchema = new Schema({
     name: {
@@ -79,17 +80,8 @@ const productSchema = new Schema({
         required: true
     },
     reviews: [{
-        rating: {
-            type: Number,
-            required: [true, 'Rating must be provided'],
-            min: [1, 'Rating must be atleas 1'],
-            max: [5, 'Rating must be atleas 1']
-        },
-        body: {
-            type: String,
-            required: [true, 'Review must be provided']
-        },
-        user: { type: Schema.Types.ObjectId, ref: 'User' }
+        type: Schema.Types.ObjectId,
+        ref: 'Review'
     }],
     status: {
         type: String,
@@ -99,8 +91,23 @@ const productSchema = new Schema({
             message: 'Please select the correct status for the product'
         }
     },
+    sold: {
+        type: Number,
+        default: 0
+    }
 }, { timestamps: true })
 
+
+//Middleware to delete reviews related to the product when the product is deleted
+productSchema.post('findOneAndDelete', async function (doc) {
+    if (doc) {
+        await Review.deleteMany({
+            _id: {
+                $in: doc.reviews
+            }
+        })
+    }
+})
 
 productSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {

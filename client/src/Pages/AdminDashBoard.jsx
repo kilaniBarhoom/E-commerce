@@ -23,7 +23,11 @@ export default function AdminDashBoard() {
 
   const tabRender = (tabName) => {
     if (tabName === "main")
-      return <MUI.Typography variant="h3">Admin Page</MUI.Typography>;
+      return (
+        <MUI.Typography variant="h3" className="dark:text-white">
+          Admin Page
+        </MUI.Typography>
+      );
 
     if (tabName === "products") {
       localStorage.setItem("adminTabQuery", "products");
@@ -45,7 +49,7 @@ export default function AdminDashBoard() {
     }
   };
   return (
-    <MUI.Box>
+    <MUI.Box className="min-h-screen h-fit">
       <MUI.Box mt={3} role="presentation">
         <MUI.Breadcrumbs
           aria-label="breadcrumb"
@@ -80,15 +84,15 @@ export default function AdminDashBoard() {
         </MUI.Breadcrumbs>
       </MUI.Box>
       <FadeIn>
-        <MUI.Stack className="flex gap-3 flex-row w-full">
-          <MUI.Box sx={{ display: { xs: "none", md: "flex" } }}>
+        <MUI.Stack className="flex gap-3 flex-row mx-auto w-11/12">
+          <MUI.Box sx={{ display: { xs: "none", md: "flex" }, flex: 0.25 }}>
             <AdminNav
               adminTabQuery={adminTabQuery}
               setAdminTabQuery={setAdminTabQuery}
             />
           </MUI.Box>
 
-          <MUI.Box className="overflow-hidden w-full">
+          <MUI.Box className="overflow-hidden w-full flex-1">
             {tabRender(adminTabQuery)}
           </MUI.Box>
         </MUI.Stack>

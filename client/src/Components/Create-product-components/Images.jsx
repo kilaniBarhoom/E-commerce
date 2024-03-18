@@ -65,7 +65,6 @@ export default function Images({ updateProductData }) {
             >
               <AddIcon />
               <input
-                required
                 type="file"
                 multiple
                 {...getInputProps()}
@@ -90,7 +89,7 @@ export default function Images({ updateProductData }) {
             className="absolute w-full flex-col h-full flex items-center justify-center cursor-pointer gap-3"
           >
             <img
-              src="/src/assets/draganddropareacloudimage-removebg-preview.png"
+              src="/assets/draganddropareacloudimage-removebg-preview.png"
               width={150}
               height={100}
               className=""

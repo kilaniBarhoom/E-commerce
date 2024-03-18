@@ -3,38 +3,20 @@ import { LinearProgress } from "@mui/joy";
 import * as MUI from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../../AxiosCredintialsCookie";
 import AdminTableStructure from "../../Components/AdminTableStructure";
 import AdminProductsGridLayout from "../../Constants/Admin Grid Layouts/AdminProductsGridLayout";
+import { GetAllProducts } from "../../Utils/GetAllProducts";
 export default function Products() {
   const { productsHeaderGridRow } = AdminProductsGridLayout();
-  const [rows, setRows] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loadingToGetProducts, setLoadingToGetProducts] = useState(true);
   const nav = useNavigate();
+  const { getAllProducts } = GetAllProducts({
+    setLoadingToGetProducts,
+    setProducts,
+  });
   useEffect(() => {
-    async function getProducts() {
-      try {
-        const response = await axios.get("/products");
-        if (response.status === 200) {
-          let products = response.data.products;
-          products.forEach((product) => {
-            product.id = product._id;
-            product.seller = product.user;
-            product.seller.avatar = product.user.avatar.url;
-            product.seller.name = product.user.username;
-            product.seller.email = product.user.email;
-            product.preview = product.images[0].url;
-            product.rating = 0;
-          });
-          setRows(products);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoadingToGetProducts(false);
-      }
-    }
-    getProducts();
+    getAllProducts();
   }, []);
   return (
     <MUI.Box className="w-full flex flex-row h-full items-center justify-center">
@@ -57,7 +39,7 @@ export default function Products() {
                 Products
               </MUI.Typography>
               <span className="p-1 px-[10px]  rounded-lg bg-blue-500 text-white">
-                {rows.length}
+                {products.length}
               </span>
             </MUI.Stack>
 
@@ -75,24 +57,7 @@ export default function Products() {
           </MUI.Stack>
           <MUI.Box id="products table" className="dataGridContainer">
             <AdminTableStructure
-              rows={
-                rows || [
-                  {
-                    id: "1",
-                    preview: "https://via.placeholder.com/150",
-                    name: "Product Name",
-                    seller: {
-                      avatar: "https://via.placeholder.com/150",
-                      name: "Seller Name",
-                      email: "Seller Email",
-                    },
-                    price: 10,
-                    stock: 10,
-                    status: "Pending",
-                    rating: 2,
-                  },
-                ]
-              }
+              rows={products}
               columns={productsHeaderGridRow}
               // rowsSelected={selectedProducts}
               // setRowSelected={setSelectedProducts}

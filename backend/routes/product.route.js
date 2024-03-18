@@ -28,4 +28,10 @@ router.route('/:productId/reviews')
 router.route('/:productId/reviews/:reviewId')
     .delete(auth, catcher(controller.deleteReview))
 
+
+
+// /api/products/:productId/resolve
+router.route('/:productId/resolve')
+    .post(auth, hasRole(Roles.ADMIN), catcher(controller.resolveProduct))
+
 export default router

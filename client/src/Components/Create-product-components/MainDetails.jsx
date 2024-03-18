@@ -1,10 +1,8 @@
 import * as MUI from "@mui/material";
-import { useRef } from "react";
 import Images from "./Images";
 import PropTypes from "prop-types";
 
 export default function MainDetails({ updateProductData }) {
-  const productNameRef = useRef();
   return (
     <MUI.Stack className="flex flex-row justify-center w-full gap-6">
       <MUI.Box flex={1} sx={{ display: { xs: "none", md: "block" } }}>
@@ -30,8 +28,6 @@ export default function MainDetails({ updateProductData }) {
           Main Details
         </MUI.Typography>
         <input
-          required
-          ref={productNameRef}
           type="text"
           className="bg-transparent border-neutral-500 h-[60px] hover:border-white focus-within:border-white
              placeholder:text-neutral-500 text-white p-5 rounded-lg text-lg "
@@ -39,7 +35,6 @@ export default function MainDetails({ updateProductData }) {
           onChange={(e) => updateProductData("name", e.target.value)}
         />
         <textarea
-          required
           className="bg-transparent min-h-[160px]  border-neutral-500  hover:border-white focus-within:border-white placeholder:text-neutral-500 text-white text-lg rounded-lg p-4 outline-none resize-none w-full"
           placeholder="Product Description "
           onChange={(e) => updateProductData("description", e.target.value)}

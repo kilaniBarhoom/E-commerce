@@ -8,7 +8,6 @@ import handleErrors from './utils/errors.js';
 
 
 
-
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: false }));

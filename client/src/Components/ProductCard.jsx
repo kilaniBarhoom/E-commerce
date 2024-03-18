@@ -8,26 +8,32 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-export default function ProductCard({ content }) {
+export default function ProductCard({ product }) {
+  //destructuring the product object
+  const { _id, name, price, images } = product;
+
   return (
     <Card
       sx={{ minWidth: 180, maxWidth: 275 }}
       className="border-solid border-2 border-neutral-200"
     >
       <CardMedia
-        sx={{ height: 100 }}
-        image={content?.image}
+        sx={{ height: 200 }}
+        image={images[0]?.url}
         title="green iguana"
       />
       <CardContent>
-        <Link className="no-underline text-black hover:text-blue-400">
+        <Link
+          className="no-underline text-black hover:text-blue-400"
+          to={`/products/${_id}`}
+        >
           <Typography gutterBottom variant="h6" component="div">
-            {content?.text}
+            {name.length > 20 ? name.slice(0, 20) + "..." : name}
           </Typography>
         </Link>
-        <Rating className="mt-2" value={3} readOnly />
+
         <Box>
-          <Typography variant="h6">{content?.price}</Typography>
+          <Typography variant="h6">$ {price}</Typography>
         </Box>
       </CardContent>
       <CardActions>
@@ -39,12 +45,11 @@ export default function ProductCard({ content }) {
         >
           Add to cart
         </Button>
-        {/* <IconButton size="small">Learn More</IconButton> */}
       </CardActions>
     </Card>
   );
 }
 
 ProductCard.propTypes = {
-  content: PropTypes.object.isRequired,
+  product: PropTypes.object.isRequired,
 };

@@ -1,13 +1,14 @@
 import express from "express";
-const router = express.Router();
 import { NOT_FOUND, OK } from "./constants/status.constants.js";
+const router = express.Router();
 
 //Cookie pasrser
 
 // Routes and Authorizations
 import authRoutes from "./routes/auth.route.js";
-import productRoutes from "./routes/product.route.js";
 import orderRoutes from "./routes/order.route.js";
+import productRoutes from "./routes/product.route.js";
+import reviewRoutes from "./routes/review.route.js";
 
 
 //	Routes
@@ -22,6 +23,9 @@ router.use("/auth", authRoutes);
 
 //Product Routes
 router.use('/products', productRoutes)
+
+//Review Routes
+router.use('/reviews', reviewRoutes)
 
 //Order Routes
 router.use('/orders', orderRoutes)

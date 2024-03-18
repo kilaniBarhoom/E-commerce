@@ -1,4 +1,3 @@
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { Box, Button, Stack } from "@mui/material";
 import ProductCategories from "../Constants/ProductCategories";
 
@@ -7,16 +6,15 @@ export default function CategoryNav() {
   return (
     <Box className="leftNav">
       <h2 className="dark:text-white">Categories</h2>
-      <Stack alignItems="start" gap={1}>
+      <Stack className="w-60 gap-1 items-start">
         {productCategories.map((category) => (
           <Button
             key={category.id}
             startIcon={category.icon}
-            className="hover:bg-neutral-600 px-3 dark:text-white w-full min-w-50 justify-between"
+            className="dark:hover:bg-neutral-800 w-full justify-start text-neutral-600 dark:text-neutral-300 px-3 p-2 normal-case font-semibold"
             onClick={() => {
               console.log(category.name);
             }}
-            endIcon={<KeyboardArrowRightIcon />}
           >
             {category.name}
           </Button>

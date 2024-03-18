@@ -4,7 +4,7 @@ import moment from "moment";
 import ReactCountryFlag from "react-country-flag";
 import { Link } from "react-router-dom";
 import avatarColors from "../AdminSalesMenAvatarColors.js";
-import countryNameToCode from "../ContryCodes.js";
+import countryNameToCode from "../CountryCodes.js";
 
 export default function AdminCustomersGridLayout() {
   const customersHeaderGridRow = [
@@ -74,7 +74,7 @@ export default function AdminCustomersGridLayout() {
         <Stack direction={"row"} gap={1} alignItems={"center"}>
           <ReactCountryFlag
             className="emojiFlag"
-            countryCode={countryNameToCode[params.value]}
+            countryCode={countryNameToCode[params.value].code}
             style={{
               fontSize: "2em",
             }}

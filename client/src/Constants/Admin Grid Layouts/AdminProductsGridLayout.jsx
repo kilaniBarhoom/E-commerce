@@ -12,9 +12,9 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/joy";
-import { Avatar, Rating, Stack, Typography } from "@mui/material";
-import avatarColors from "../AdminSalesMenAvatarColors";
+import { Avatar, Rating, Stack, Typography, styled } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import avatarColors from "../AdminSalesMenAvatarColors";
 export default function AdminProductsGridLayout() {
   const nav = useNavigate();
   const productsHeaderGridRow = [
@@ -120,7 +120,6 @@ export default function AdminProductsGridLayout() {
       type: "number",
       editable: false,
       headerAlign: "left",
-      resizable: true,
       renderCell: (params) => (
         <Tooltip
           title={`${params.value} left in stock`}
@@ -185,7 +184,7 @@ export default function AdminProductsGridLayout() {
       editable: false,
       headerAlign: "left",
       renderCell: (params) => (
-        <Rating className="" readOnly value={params.value} />
+        <StyledRating className="dark-theme" readOnly value={params.value} />
       ),
     },
     {
@@ -239,3 +238,20 @@ export default function AdminProductsGridLayout() {
   ];
   return { productsHeaderGridRow };
 }
+
+const isDarkMode = () => {
+  // Replace 'dark' with the actual dark mode class from Tailwind CSS
+  return document.documentElement.classList.contains("dark");
+};
+
+const StyledRating = styled(Rating)(() => ({
+  // Add your custom styles here
+  // Example for handling dark background
+  color: isDarkMode() ? "#fff" : "#000",
+  "& .MuiRating-iconFilled": {
+    color: isDarkMode() ? "#fff" : "#f57c00", // Adjust the filled star color
+  },
+  "& .MuiRating-iconEmpty": {
+    color: isDarkMode() ? "#616161" : "#bdbdbd", // Adjust the empty star color
+  },
+}));

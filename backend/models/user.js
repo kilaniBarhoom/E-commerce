@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
 import { Schema, model } from 'mongoose'
 import validator from 'validator'
-import jwt from 'jsonwebtoken'
-import crypto from 'crypto'
 import cloudinary from '../utils/cloudinary.js'
 
 const userSchema = new Schema({
@@ -25,16 +25,18 @@ const userSchema = new Schema({
         minlength: [8, 'Password must be atleast 8 characters'],
         select: false
     },
+    // avatar is not required but the public_id and the url are
     avatar: {
         public_id: {
             type: String,
-            required: true,
+            default: ''
         },
         url: {
             type: String,
-            required: true
+            default: ''
         }
     },
+
     role: {
         type: String,
         default: 'user'
@@ -52,6 +54,9 @@ const userSchema = new Schema({
         postalCode: {
             type: String,
         }
+    },
+    phone: {
+        type: String,
     },
 
 }, { timestamps: true })

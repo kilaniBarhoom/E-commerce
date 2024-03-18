@@ -1,6 +1,6 @@
+import * as statusCodes from '../constants/status.constants.js';
 import Order from "../models/order.js";
 import Product from "../models/product.js";
-import * as statusCodes from '../constants/status.constants.js'
 import ResponseError from "../utils/responseerror.js";
 
 // /api/orders/admin
@@ -96,6 +96,12 @@ export const createOrder = async (req, res, next) => {
         paidAt: Date.now(), user: req.user._id
     })
 
+    // loop over products and update stock and add the quantity purchased to the totlal number sold of a single product
+    order.orderItems.forEach(async item => {
+        await updateStock(item.product, item.quantity)
+        await updateNumberOfSoldProductsOfASingleProduct(item.product, item.quantity)
+    })
+
     res.status(statusCodes.CREATED).json({
         message: "Order placed",
         order
@@ -141,5 +147,11 @@ export const getOrder = async (req, res, next) => {
 async function updateStock(id, quantity) {
     const product = await Product.findById(id)
     product.stock = product.stock - quantity
+    await product.save()
+}
+
+async function updateNumberOfSoldProductsOfASingleProduct(id, quantity) {
+    const product = await Product.findById(id)
+    product.sold = product.sold + quantity
     await product.save()
 }

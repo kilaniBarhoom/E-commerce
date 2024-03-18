@@ -98,7 +98,7 @@ export default function AdminReviewsGridLayout() {
       ),
     }, // rating
     {
-      field: "review",
+      field: "content",
       headerName: "Review",
       align: "left",
       width: 400,
@@ -121,9 +121,9 @@ export default function AdminReviewsGridLayout() {
           </Typography>
         </div>
       ),
-    }, // review
+    }, // content
     {
-      field: "dateRated",
+      field: "date",
       headerName: "Date Rated",
       align: "left",
       width: 172,
@@ -141,7 +141,7 @@ export default function AdminReviewsGridLayout() {
       ),
     }, // date rated
     {
-      field: "acion",
+      field: "action",
       headerName: "",
       align: "center",
       width: 100,

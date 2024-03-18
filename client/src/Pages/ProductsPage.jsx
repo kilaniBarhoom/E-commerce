@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import FadeIn from "react-fade-in/lib/FadeIn";
@@ -17,10 +17,20 @@ import ProductSearchBar from "../Components/ProductSearchBar";
 import ProductsDisplay from "../Components/ProductsDisplay";
 import SmallScreenCategoriesMenu from "../Components/SmallScreenCategoriesMenu";
 import productContent from "../Constants/SampleProducts";
+import { GetAllProducts } from "../Utils/GetAllProducts";
 import "../Styles/Categories.css";
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState([]);
+  const [loadingToGetProducts, setLoadingToGetProducts] = useState(true);
   const nav = useNavigate();
+  const { getAllProducts } = GetAllProducts({
+    setLoadingToGetProducts,
+    setProducts,
+  });
+  useEffect(() => {
+    getAllProducts();
+  }, []);
 
   function handleClick(event) {
     event.preventDefault();
@@ -31,13 +41,13 @@ export default function ProductsPage() {
     return `${value} $`;
   }
 
-  const [value, setValue] = React.useState([0, 500]);
+  const [value, setValue] = useState([0, 500]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick1 = (event) => {
     setAnchorEl(event.currentTarget);
@@ -150,7 +160,7 @@ export default function ProductsPage() {
                 </Stack>
               </Stack>
             </Stack>
-            <ProductsDisplay productContent={productContent} />
+            <ProductsDisplay products={products} />
           </Box>
         </Stack>
       </Box>

@@ -21,14 +21,11 @@ export default function AdminNav({ adminTabQuery, setAdminTabQuery }) {
     );
   }, [adminTabQuery]);
 
-  useEffect(() => {
-    setAdminTabQuery("main");
-  }, []);
-
   return (
     <Stack alignItems="start" gap={1} className="w-60 p-2 rounded-md">
       {adminNavTabs.map((adminTab) => (
         <Button
+          size="large"
           key={adminTab.id}
           startIcon={adminTab.icon}
           onClick={() => {
@@ -45,6 +42,7 @@ export default function AdminNav({ adminTabQuery, setAdminTabQuery }) {
       ))}
       <Divider />
       <Button
+        size="large"
         startIcon={<ReportGmailerrorredOutlinedIcon />}
         onClick={() => {
           handleTabChange("reports");
@@ -58,6 +56,7 @@ export default function AdminNav({ adminTabQuery, setAdminTabQuery }) {
         Reports
       </Button>
       <Button
+        size="large"
         startIcon={<SettingsOutlinedIcon />}
         onClick={() => {
           handleTabChange("settings");

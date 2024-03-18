@@ -1,10 +1,9 @@
 import * as MUI from "@mui/material";
 import PropTypes from "prop-types";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 export default function Pricing({ updateProductData }) {
   const [taxInclude, setTaxInclude] = useState(false);
-  const taxInputRef = useRef(null);
   return (
     <MUI.Stack className="flex flex-row justify-center w-full gap-6">
       <MUI.Box flex={1} sx={{ display: { xs: "none", md: "block" } }}>
@@ -38,7 +37,6 @@ export default function Pricing({ updateProductData }) {
               $
             </MUI.Typography>
             <input
-              required
               type="number"
               step="0.01"
               min={0}
@@ -75,7 +73,6 @@ export default function Pricing({ updateProductData }) {
                 checked={taxInclude}
                 onClick={() => {
                   setTaxInclude(!taxInclude);
-                  taxInputRef.current.focus();
                 }}
               />
             }
@@ -90,7 +87,6 @@ export default function Pricing({ updateProductData }) {
               %
             </MUI.Typography>
             <input
-              ref={taxInputRef}
               type="number"
               step="0.01"
               min={0}

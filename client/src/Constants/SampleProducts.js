@@ -1,6 +1,6 @@
 const productContent = [
     {
-        image: "./src/assets/food.png",
+        image: "./assets/food.png",
         category: "Food",
         text: "Lettus",
         rating: 5,

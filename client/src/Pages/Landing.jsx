@@ -12,10 +12,10 @@ export default function Landing() {
   const nav = useNavigate();
 
   const slideContent = [
-    { image: "./src/assets/food.png", text: "Food" },
-    { image: "./src/assets/electronics.png", text: "Electronics" },
-    { image: "./src/assets/sports.png", text: "Sports" },
-    { image: "./src/assets/clothes.png", text: "Clothes" },
+    { image: "./assets/food.png", text: "Food" },
+    { image: "./assets/electronics.png", text: "Electronics" },
+    { image: "./assets/sports.png", text: "Sports" },
+    { image: "./assets/clothes.png", text: "Clothes" },
   ];
 
   const images = [
@@ -24,7 +24,7 @@ export default function Landing() {
       height={450}
       key={1}
       sx={{
-        background: "url(./src/assets/grocbg.png)",
+        background: "url(./assets/grocbg.png)",
         borderRadius: 2,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -56,7 +56,7 @@ export default function Landing() {
       height={450}
       key={2}
       sx={{
-        background: "url(./src/assets/clothesbg1.png)",
+        background: "url(./assets/clothesbg1.png)",
         borderRadius: 2,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -124,7 +124,7 @@ export default function Landing() {
             <Box
               height={230}
               flex={1}
-              className="bg-[url(./src/assets/clothesbg.png)] bg-cover rounded-sm shadow-md"
+              className="bg-[url(./assets/clothesbg.png)] bg-cover rounded-sm shadow-md"
               mt={3}
               display="flex"
               justifyContent="start"
@@ -151,7 +151,7 @@ export default function Landing() {
               height={230}
               flex={1}
               sx={{
-                background: "url(./src/assets/foodbg.png)",
+                background: "url(./assets/foodbg.png)",
                 backgroundSize: "cover",
                 borderRadius: 2,
                 boxShadow: "0px 0px 8px 0.5px rgba(0, 0, 0, 0.7)",

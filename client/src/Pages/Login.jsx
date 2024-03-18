@@ -1,119 +1,203 @@
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
-import axios from "axios";
+import {
+  Alert,
+  Backdrop,
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  FormControlLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../AxiosCredintialsCookie";
+import PropTypes from "prop-types";
 
 export default function Login() {
+  const [passwordType, setPasswordType] = useState("password");
+  const [errorLoggingIn, setErrorLoggingIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [pageLoading, setPageLoading] = useState(true);
   const nav = useNavigate();
+
+  const isDarkMode = () => {
+    return localStorage.getItem("darkMode") === "true";
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const onSubmit = async (data) => {
+    setErrorLoggingIn(false);
+    setErrorMessage("");
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        data,
-        { withCredentials: true }
-      );
+      const res = await axios.post("auth/login", data);
       if (res.status === 200) {
-        console.log(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        nav("/");
+        // window.location.reload();
       }
     } catch (error) {
-      console.log(error);
+      setErrorLoggingIn(true);
+      setErrorMessage(error.response.data.message);
     }
   };
 
-  return (
-    <div>
-      <Box py={3} px={5}>
-        <Typography
-          variant="h5"
-          fontWeight={600}
-          noWrap
-          component="div"
-          sx={{
-            display: { xs: "flex", sm: "flex", cursor: "pointer" },
-          }}
-          onClick={() => nav("/")}
-        >
-          <img
-            src="./src/assets/shoplogo.png"
-            width={30}
-            alt=""
-            style={{ transform: "rotateY(180deg)" }}
-          />
-          E-commerce
-        </Typography>
-      </Box>
-      <Divider />
-      <Box
-        mx="auto"
-        mt={5}
-        height="60%"
-        borderRadius={3}
-        width={400}
-        border="solid 2px #58B6CE"
-        p={3}
-      >
-        <Stack id="login-container" gap={5}>
-          <Box>
-            <Typography variant="h4" fontWeight={800} color="#000">
-              Log In to FreshCart
-            </Typography>
-            <Typography
-              variant="span"
-              fontWeight={600}
-              color=" rgba(0, 0, 0, 0.5) "
-            >
-              Welcome back to FreshCart enter your email to get started
-            </Typography>
-          </Box>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack gap={5}>
-              <Stack gap={1}>
-                <input
-                  placeholder="Email"
-                  {...register("email", {
-                    pattern:
-                      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                  })}
-                />
-                {errors.email && (
-                  <span style={{ color: "red", fontSize: "0.8rem" }}>
-                    Invalid Email
-                  </span>
-                )}
+  const handleShowPassword = (e) => {
+    e.target.checked ? setPasswordType("text") : setPasswordType("password");
+  };
 
-                <input
-                  placeholder="Password"
-                  type="password"
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
-                />
-                {errors.password && !errors.email && (
-                  <span style={{ color: "red", fontSize: "0.8rem" }}>
-                    {errors.password.message}
-                  </span>
-                )}
+  return (
+    <div className="align-middle flex justify-center items-center">
+      {pageLoading && (
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={pageLoading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
+      <Stack
+        direction="row"
+        className="p-5 bg-white dark:bg-neutral-900 gap-10"
+        alignItems="center"
+        sx={{ boxShadow: { xs: "none", md: 10 } }}
+      >
+        <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <img
+            onLoad={() => setPageLoading(false)}
+            width={500}
+            height={500}
+            src={
+              isDarkMode()
+                ? "/assets/login-signup-img-dark.png"
+                : "/assets/login-signup-img.jpg"
+            }
+            alt=""
+          />
+        </Box>
+
+        <Box
+          className="bg-transparent darkl:text-white border-r-20"
+          sx={{ boxShadow: { xs: 10, md: "none" }, p: { xs: 5, md: 0 } }}
+          width={400}
+        >
+          <Stack id="login-container" gap={5}>
+            {errorLoggingIn && (
+              <Alert severity="error" color="error" variant="filed">
+                {errorMessage}
+              </Alert>
+            )}
+            <Box>
+              <Typography
+                variant="h4"
+                fontWeight={900}
+                className="dark:text-white"
+              >
+                Welcome To E-commerce
+              </Typography>
+              <Typography
+                variant="span"
+                fontWeight={600}
+                className="dark:text-neutral-400"
+              >
+                Welcome back to Projects enter your email to get started
+              </Typography>
+            </Box>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Stack gap={5}>
+                <Stack gap={1}>
+                  <input
+                    style={{ borderColor: errors.email ? "red" : "" }}
+                    placeholder="Email"
+                    type="email"
+                    {...register("email", {
+                      required: "Enter your email address",
+                    })}
+                    className="p-3 text-base rounded-md outline-none
+                    border-2
+                    border-solid
+                     border-neutral-500
+                    dark:border-neutral-600
+                    dark:bg-transparent
+                    dark:text-white
+                    dark:hover:border-neutral-300 dark:focus:border-neutral-300 dark:placeholder-neutral-300 dark:placeholder-opacity-50
+                    caret-neutral-500 dark:caret-neutral-500
+                    "
+                  />
+                  {errors.email && (
+                    <span
+                      style={{
+                        color: "red",
+                        fontSize: "0.8rem",
+                        fontWeight: "500",
+                      }}
+                    >
+                      Invalid Email
+                    </span>
+                  )}
+                  <input
+                    style={{ borderColor: errors.password ? "red" : "" }}
+                    placeholder="Password"
+                    type={passwordType}
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                    className="p-3 text-base rounded-md outline-none
+                    border-2
+                    border-solid
+                     border-neutral-500
+                    dark:border-neutral-600
+                    dark:bg-transparent
+                    dark:text-white
+                    dark:hover:border-neutral-300 dark:focus:border-neutral-300 dark:placeholder-neutral-300 dark:placeholder-opacity-50
+                    caret-neutral-500 dark:caret-neutral-500
+                    "
+                  />
+                  {errors.password && !errors.email && (
+                    <span
+                      style={{
+                        color: "red",
+                        fontSize: "0.8rem",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {errors.password.message}
+                    </span>
+                  )}
+                  <FormControlLabel
+                    control={<Checkbox className="dark:text-white" />}
+                    label="Show Password"
+                    className="dark:text-white select-none"
+                    onChange={handleShowPassword}
+                  />
+                </Stack>
+                <Stack gap={1}>
+                  <Button
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    className="bg-blue-500"
+                  >
+                    Login
+                  </Button>
+                  <Typography className="dark:text-white">
+                    Don't have an account?{"  "}
+                    <Link className="no-underline text-blue-500" to="/signup">
+                      signup
+                    </Link>
+                  </Typography>
+                </Stack>
               </Stack>
-              <Stack gap={1}>
-                <Button fullWidth type="submit" variant="contained">
-                  Login
-                </Button>
-                <Typography color="rgba(0, 0, 0, 0.9) ">
-                  Dont have an account?{" "}
-                  <Link style={{ textDecoration: "none" }} to="/signup">
-                    Sign up
-                  </Link>
-                </Typography>
-              </Stack>
-            </Stack>
-          </form>
-        </Stack>
-      </Box>
+            </form>
+          </Stack>
+        </Box>
+      </Stack>
     </div>
   );
 }

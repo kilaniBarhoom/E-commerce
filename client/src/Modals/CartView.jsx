@@ -1,9 +1,6 @@
+import { Box, Button, Modal, Stack, Typography } from "@mui/material";
 import * as React from "react";
-import { Box, Stack, Button, Typography, Modal, styled } from "@mui/material";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 // import axios from "axios";
-import { toast } from "react-hot-toast";
 import CloseIcon from "@mui/icons-material/Close";
 
 // import { BaseURL, token, userId } from "../Contexts/Vars";
@@ -46,19 +43,19 @@ const style = {
 
 const items = [
   {
-    image: "./src/assets/food.png",
+    image: "./assets/food.png",
     name: "food",
     count: 1,
     price: 10,
   },
   {
-    image: "./src/assets/food.png",
+    image: "./assets/food.png",
     name: "food",
     count: 1,
     price: 10,
   },
   {
-    image: "./src/assets/food.png",
+    image: "./assets/food.png",
     name: "food",
     count: 1,
     price: 10,

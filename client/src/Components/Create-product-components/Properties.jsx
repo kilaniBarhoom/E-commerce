@@ -51,7 +51,6 @@ export default function Properties({ updateProductData }) {
         </MUI.Typography>
         <MUI.Stack className="gap-4 flex flex-row ">
           <input
-            required
             type="number"
             className="bg-transparent border-neutral-500  hover:border-white focus-within:border-white
              placeholder:text-neutral-500 text-white p-5 w-full rounded-lg text-lg h-[30px]"
@@ -59,7 +58,6 @@ export default function Properties({ updateProductData }) {
             onChange={(e) => updateProductData("quantity", e.target.value)}
           />
           <input
-            required
             type="number"
             min={0}
             max={100000}

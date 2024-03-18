@@ -25,7 +25,7 @@ export default function CreateProduct() {
   const nav = useNavigate();
 
   const updateProductData = (field, value) => {
-    console.log(field, value);
+    console.log(productData);
     setProductData({ ...productData, [field]: value });
     if (value) {
       setDraftButtonDisabled(false);

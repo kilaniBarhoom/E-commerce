@@ -96,8 +96,8 @@ export const createProduct = async (req, res, next) => {
 // /api/products/:productId
 export const updateProduct = async (req, res, next) => {
     const { productId } = req.params
-    const { name, price, description, images, category, seller, stock, status } = req.body;
-    if (!name || !price || !description || !images || !category || !seller || !stock || !status) {
+    const { name, price, description, category, stock, status, quantity } = req.body;
+    if (!name || !price || !description || !category || !stock || !status || !quantity) {
         return next(
             new ResponseError(
                 "Please provide correct data for the product",
@@ -147,27 +147,10 @@ export const deleteProduct = async (req, res, next) => {
 
 }
 
-// /api/products/:productId/reviews
-export const getAllReviews = async (req, res, next) => {
-    const { productId } = req.params;
-    const product = await Product.findById(productId).populate('reviews.user', 'username avatar')
-    if (!product) {
-        return next(
-            new ResponseError(
-                "Product not found",
-                statusCodes.NOT_FOUND
-            )
-        )
-    }
 
-    const reviews = product.reviews
-
-    res.status(statusCodes.OK).json({
-        reviews
-    })
-}
-export const createReview = async (req, res, next) => {
-    const { productId } = req.params;
+// /api/products/:productId/resolve
+export const resolveProduct = async (req, res, next) => {
+    const { productId } = req.params
     const product = await Product.findById(productId)
     if (!product) {
         return next(
@@ -177,74 +160,18 @@ export const createReview = async (req, res, next) => {
             )
         )
     }
-    const { rating, body } = req.body
-    if (!rating || !body) {
+    // handle product already resolved
+    if (product.status === "Active") {
         return next(
             new ResponseError(
-                "Enter all required fields",
+                "Product already resolved",
                 statusCodes.BAD_REQUEST
             )
         )
     }
-    const didRate = product.reviews.find(review => {
-        return review.user.toString() == req.user._id.toString()
-    })
-    if (didRate) {
-        didRate.body = body;
-        didRate.rating = rating;
-    } else {
-        const review = {
-            rating,
-            body,
-            user: req.user._id
-        }
-        product.reviews.push(review)
-    }
-
-
-    await product.save()
-
-    res.status(statusCodes.CREATED).json({
-        message: "Review added"
-    })
-}
-
-
-// /api/products/:productId/reviews/:reviewId
-export const deleteReview = async (req, res, next) => {
-    const { productId, reviewId } = req.params
-    const product = await Product.findById(productId)
-    if (!product) {
-        return next(
-            new ResponseError(
-                "Product not found",
-                statusCodes.NOT_FOUND
-            )
-        )
-    }
-
-    const review = product.reviews.find(review => review._id == reviewId)
-    if (!review) {
-        return next(
-            new ResponseError(
-                "Review not found",
-                statusCodes.NOT_FOUND
-            )
-        )
-    }
-
-    if (req.user.role != 'admin' && review.user.toString() != req.user._id.toString()) {
-        return next(
-            new ResponseError(
-                "You cannot delete this review",
-                statusCodes.BAD_REQUEST
-            )
-        )
-    }
-    product.reviews.pull(review._id)
+    product.status = "Active";
     await product.save()
     res.status(statusCodes.OK).json({
-        message: "Review deleted"
+        message: "Product resolved",
     })
-
 }

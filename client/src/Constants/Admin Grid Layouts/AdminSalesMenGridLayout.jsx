@@ -4,7 +4,7 @@ import { Avatar, IconButton, Stack, Typography } from "@mui/material";
 import moment from "moment";
 import ReactCountryFlag from "react-country-flag";
 import avatarColors from "../AdminSalesMenAvatarColors.js";
-import countryNameToCode from "../ContryCodes.js";
+import countryNameToCode from "../CountryCodes.js";
 
 export default function AdminSalesMenGridLayout() {
   const salesMenHeaderGridRow = [
@@ -74,7 +74,7 @@ export default function AdminSalesMenGridLayout() {
         <Stack direction={"row"} gap={1} alignItems={"center"}>
           <ReactCountryFlag
             className="emojiFlag"
-            countryCode={countryNameToCode[params.value]}
+            countryCode={countryNameToCode[params.value].code}
             style={{
               fontSize: "2em",
             }}
